@@ -1,16 +1,16 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export class GeminiClient {
-    constructor(apiKey) {
-        if (!apiKey) {
-            throw new Error('GEMINI_API_KEY is required');
-        }
-        this.genAI = new GoogleGenerativeAI(apiKey);
-        this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+  constructor(apiKey) {
+    if (!apiKey) {
+      throw new Error('GEMINI_API_KEY is required');
     }
+    this.genAI = new GoogleGenerativeAI(apiKey);
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  }
 
-    async generatePresentation(projectData) {
-        const prompt = `
+  async generatePresentation(projectData) {
+    const prompt = `
       You are a technical presentation generator.
       Generate a JSON presentation script for a web project.
       
@@ -37,13 +37,13 @@ export class GeminiClient {
       }
     `;
 
-        const result = await this.model.generateContent(prompt);
-        const response = await result.response;
-        let text = response.text();
+    const result = await this.model.generateContent(prompt);
+    const response = await result.response;
+    let text = response.text();
 
-        // Cleanup markdown
-        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    // Cleanup markdown
+    text = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
-        return JSON.parse(text);
-    }
+    return JSON.parse(text);
+  }
 }

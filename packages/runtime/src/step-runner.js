@@ -3,8 +3,15 @@ import { Highlighter } from './highlighter.js';
 import { Narrator } from './narrator.js';
 
 export class StepRunner {
-    constructor(configUrl = 'presentation.json') {
-        this.configUrl = configUrl;
+    constructor(configOrData = 'presentation.json') {
+        if (typeof configOrData === 'string') {
+            this.configUrl = configOrData;
+            this.data = null;
+        } else {
+            this.configUrl = null;
+            this.data = configOrData;
+        }
+
         this.steps = [];
         this.currentStep = 0;
         this.popup = new Popup();
@@ -22,11 +29,16 @@ export class StepRunner {
 
     async start() {
         try {
-            const response = await fetch(this.configUrl);
-            if (!response.ok) throw new Error('Failed to load presentation');
-
-            const data = await response.json();
-            this.steps = data.steps;
+            if (this.data) {
+                this.steps = this.data.steps;
+            } else if (this.configUrl) {
+                const response = await fetch(this.configUrl);
+                if (!response.ok) throw new Error('Failed to load presentation');
+                const data = await response.json();
+                this.steps = data.steps;
+            } else {
+                throw new Error('No configuration provided');
+            }
 
             // Check for persisted step
             const savedStep = localStorage.getItem(this.STORAGE_KEY);
