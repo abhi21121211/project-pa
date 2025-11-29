@@ -27,9 +27,11 @@ export async function deployCommand() {
         });
 
         if (response.data.success) {
-            spinner.succeed(chalk.green('Presentation deployed successfully!'));
+            spinner.succeed(chalk.green('Presentation deployed successfully! 🚀'));
             console.log(chalk.cyan(`\nProject ID: ${projectId}`));
-            console.log(chalk.gray(`(Note: In a real production scenario, this would return a public URL)`));
+            console.log(chalk.white('\nTo use this presentation, add this script to your website:'));
+            console.log(chalk.yellow(`\n<script type="module" src="https://unpkg.com/@abhi21121211/runtime@latest/dist/project-pa.min.js" data-project-id="${projectId}"></script>`));
+            console.log(chalk.gray('\n(You can remove the local presentation.json file from your public folder now)'));
         } else {
             spinner.fail('Deployment failed.');
         }
