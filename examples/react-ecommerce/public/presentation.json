@@ -1,0 +1,77 @@
+{
+    "meta": {
+        "project": "ShopPA",
+        "entryUrl": "index.html"
+    },
+    "steps": [
+        {
+            "id": "intro",
+            "type": "highlight",
+            "target": "#main-header",
+            "content": "Welcome to ShopPA! This is a React-based e-commerce demo.",
+            "page": "index.html"
+        },
+        {
+            "id": "products",
+            "type": "highlight",
+            "target": "#product-grid",
+            "content": "Here are our featured products. Let's check one out.",
+            "page": "index.html"
+        },
+        {
+            "id": "view-product",
+            "type": "click",
+            "target": ".product-card:first-child .view-btn",
+            "content": "Clicking on the first product...",
+            "page": "index.html",
+            "actions": [
+                {
+                    "do": "click",
+                    "selector": ".product-card:first-child .view-btn"
+                }
+            ]
+        },
+        {
+            "id": "product-details",
+            "type": "highlight",
+            "target": "#product-details",
+            "content": "Here are the product details. Notice how we navigated to a new route.",
+            "page": "index.html#/product/1",
+            "duration": 4000
+        },
+        {
+            "id": "add-to-cart",
+            "type": "highlight",
+            "target": "#add-to-cart-btn",
+            "content": "You can add this item to your cart.",
+            "page": "index.html#/product/1"
+        },
+        {
+            "id": "go-to-cart",
+            "type": "click",
+            "target": "#cart-link",
+            "content": "Let's go to the cart now.",
+            "page": "index.html#/product/1",
+            "actions": [
+                {
+                    "do": "click",
+                    "selector": "#cart-link"
+                }
+            ]
+        },
+        {
+            "id": "cart-review",
+            "type": "highlight",
+            "target": "#cart-items",
+            "content": "Here is your cart summary.",
+            "page": "index.html#/cart"
+        },
+        {
+            "id": "checkout",
+            "type": "highlight",
+            "target": "#checkout-btn",
+            "content": "Ready to checkout? That concludes our demo!",
+            "page": "index.html#/cart"
+        }
+    ]
+}

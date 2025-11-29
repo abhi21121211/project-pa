@@ -1,0 +1,165 @@
+/* Project PA Core Styles */
+
+:root {
+  --pa-primary: #2563eb;
+  --pa-primary-hover: #1d4ed8;
+  --pa-bg: #ffffff;
+  --pa-text: #1e293b;
+  --pa-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --pa-overlay-z: 999999;
+}
+
+/* Floating Widget */
+.pa-widget-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--pa-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: var(--pa-shadow);
+  z-index: var(--pa-overlay-z);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, background-color 0.2s;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.pa-widget-btn:hover {
+  background-color: var(--pa-primary-hover);
+  transform: scale(1.05);
+}
+
+.pa-widget-icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* Popup Window */
+.pa-popup {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 320px;
+  background: var(--pa-bg);
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  padding: 16px;
+  z-index: var(--pa-overlay-z);
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--pa-text);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+
+.pa-popup.pa-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.pa-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.pa-header-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pa-popup-close,
+.pa-popup-mute {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  padding: 4px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.pa-popup-close:hover,
+.pa-popup-mute:hover {
+  color: #1e293b;
+}
+
+.pa-popup-content {
+  margin-bottom: 16px;
+  line-height: 1.5;
+  color: #334155;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+  /* Space for scrollbar */
+}
+
+/* Custom Scrollbar for Webkit */
+.pa-popup-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pa-popup-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.pa-popup-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 2px;
+}
+
+.pa-popup-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 12px;
+}
+
+.pa-btn {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.pa-btn:hover {
+  background: #f8fafc;
+}
+
+.pa-btn-primary {
+  background: var(--pa-primary);
+  color: white;
+  border-color: var(--pa-primary);
+}
+
+.pa-btn-primary:hover {
+  background: var(--pa-primary-hover);
+}
+
+/* Highlight Overlay */
+.pa-highlight-overlay {
+  position: absolute;
+  border: 2px solid var(--pa-primary);
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: calc(var(--pa-overlay-z) - 1);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}

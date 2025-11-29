@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: project-pa-backend
+    env: node
+    plan: free
+    buildCommand: cd packages/backend && npm install
+    startCommand: cd packages/backend && npm start
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+      - key: PORT
+        value: 10000

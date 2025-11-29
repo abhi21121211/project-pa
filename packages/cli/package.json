@@ -1,0 +1,33 @@
+{
+    "name": "@abhi21121211/cli",
+    "version": "1.0.0",
+    "description": "CLI tool for Project PA",
+    "main": "bin/pa.js",
+    "bin": {
+        "pa": "./bin/pa.js"
+    },
+    "files": [
+        "bin",
+        "src"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "cli",
+        "generator",
+        "ai",
+        "gemini",
+        "presentation"
+    ],
+    "author": "Abhi",
+    "license": "MIT",
+    "dependencies": {
+        "@google/generative-ai": "^0.2.1",
+        "axios": "^1.13.2",
+        "chalk": "^5.3.0",
+        "commander": "^12.0.0",
+        "glob": "^10.3.10",
+        "ora": "^8.0.1"
+    }
+}

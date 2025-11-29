@@ -1,0 +1,50 @@
+{
+    "meta": {
+        "project": "Abhi AI Portfolio",
+        "entryUrl": "index.html"
+    },
+    "steps": [
+        {
+            "id": "intro",
+            "type": "popup",
+            "target": "body",
+            "content": "Welcome to Abhi's AI Portfolio! Let's take a quick tour.",
+            "page": "index.html"
+        },
+        {
+            "id": "hero",
+            "type": "highlight",
+            "target": "#hero",
+            "content": "This is the Hero section, introducing Abhi as an AI Engineer.",
+            "page": "index.html"
+        },
+        {
+            "id": "about",
+            "type": "highlight",
+            "target": "#about",
+            "content": "Here is a brief bio and background information.",
+            "page": "index.html"
+        },
+        {
+            "id": "skills",
+            "type": "highlight",
+            "target": "#skills",
+            "content": "These are the technical skills and technologies Abhi works with.",
+            "page": "index.html"
+        },
+        {
+            "id": "projects",
+            "type": "highlight",
+            "target": "#projects",
+            "content": "Check out these featured AI projects.",
+            "page": "index.html"
+        },
+        {
+            "id": "contact",
+            "type": "highlight",
+            "target": "#contact",
+            "content": "Feel free to reach out via these contact channels.",
+            "page": "index.html"
+        }
+    ]
+}

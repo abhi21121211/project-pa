@@ -1,0 +1,26 @@
+{
+    "name": "@abhi21121211/runtime",
+    "version": "1.0.0",
+    "description": "Runtime widget for Project PA guided tours",
+    "main": "dist/project-pa.min.js",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "node build.mjs",
+        "dev": "node build.mjs --watch",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "tour",
+        "guide",
+        "onboarding",
+        "presentation",
+        "ai"
+    ],
+    "author": "Abhi",
+    "license": "MIT",
+    "devDependencies": {
+        "esbuild": "^0.20.1"
+    }
+}
