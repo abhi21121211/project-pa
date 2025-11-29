@@ -4,7 +4,7 @@ import axios from 'axios';
 import chalk from 'chalk';
 import ora from 'ora';
 
-const BACKEND_URL = 'http://localhost:5001'; // TODO: Make configurable
+const BACKEND_URL = 'https://project-pa.onrender.com'; // Production Backend
 
 export async function deployCommand() {
     const spinner = ora('Deploying presentation...').start();
