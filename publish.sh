@@ -24,27 +24,27 @@ else
 fi
 
 # Publish Runtime
-echo -e "\n${GREEN}Publishing @abhi21121211/runtime...${NC}"
+echo -e "\n${GREEN}Publishing @abhi21121211/project-pa-runtime...${NC}"
 cd packages/runtime
 npm install
 npm run build
 npm publish --access public
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}Successfully published @abhi21121211/runtime${NC}"
+    echo -e "${GREEN}Successfully published @abhi21121211/project-pa-runtime${NC}"
 else
-    echo -e "${RED}Failed to publish @abhi21121211/runtime${NC}"
+    echo -e "${RED}Failed to publish @abhi21121211/project-pa-runtime${NC}"
     exit 1
 fi
 cd ../..
 
 # Publish CLI
-echo -e "\n${GREEN}Publishing @abhi21121211/cli...${NC}"
+echo -e "\n${GREEN}Publishing @abhi21121211/project-pa-cli...${NC}"
 cd packages/cli
 npm publish --access public
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}Successfully published @abhi21121211/cli${NC}"
+    echo -e "${GREEN}Successfully published @abhi21121211/project-pa-cli${NC}"
 else
-    echo -e "${RED}Failed to publish @abhi21121211/cli${NC}"
+    echo -e "${RED}Failed to publish @abhi21121211/project-pa-cli${NC}"
     exit 1
 fi
 cd ../..

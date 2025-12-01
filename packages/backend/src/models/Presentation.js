@@ -10,6 +10,10 @@ const PresentationSchema = new mongoose.Schema({
         type: Object,
         required: true
     },
+    history: [{
+        data: Object,
+        createdAt: { type: Date, default: Date.now }
+    }],
     createdAt: {
         type: Date,
         default: Date.now

@@ -1,5 +1,5 @@
 {
-    "name": "@abhi21121211/backend",
+    "name": "@abhi21121211/project-pa-backend",
     "version": "1.0.0",
     "description": "Cloud backend for Project PA",
     "main": "src/index.js",

@@ -6,15 +6,29 @@ export class Highlighter {
         document.body.appendChild(this.overlay);
     }
 
-    highlight(selector) {
+    highlight(selector, parentSelector = null) {
         if (!selector || selector === 'body') {
             this.hide();
             return;
         }
 
-        const element = document.querySelector(selector);
+        let element;
+        if (parentSelector) {
+            const parent = document.querySelector(parentSelector);
+            if (parent) {
+                element = parent.querySelector(selector);
+            } else {
+                console.warn(`Project PA: Parent element not found: ${parentSelector}`);
+            }
+        }
+
+        // Fallback to global search if no parent or parent not found (or element not found in parent)
         if (!element) {
-            console.warn(`Project PA: Element not found: ${selector}`);
+            element = document.querySelector(selector);
+        }
+
+        if (!element) {
+            console.warn(`Project PA: Element not found: ${selector} (Parent: ${parentSelector})`);
             this.hide();
             return;
         }

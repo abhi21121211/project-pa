@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "project": "My Project",
+    "author": "Me",
+    "entryUrl": "/"
+  },
+  "steps": [
+    {
+      "id": "intro",
+      "type": "popup",
+      "target": "body",
+      "content": "Welcome to my project!",
+      "duration": 5000
+    }
+  ]
+}

@@ -7,12 +7,16 @@ import { generateCommand } from '../src/commands/generate.js';
 import { previewCommand } from '../src/commands/preview.js';
 import { deployCommand } from '../src/commands/deploy.js';
 
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pkg = require('../package.json');
+
 const program = new Command();
 
 program
     .name('pa')
-    .description('Project PA - AI Project Presenter CLI')
-    .version('1.0.0');
+    .description('Project PA - AI Project Personal Assistant CLI')
+    .version(pkg.version);
 
 program
     .command('init')

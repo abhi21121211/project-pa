@@ -29,8 +29,8 @@ fetch(presentationUrl)
         const stepRunner = new StepRunner(data);
 
         // Create Widget
-        createWidget(() => {
-            stepRunner.start();
+        createWidget((mode) => {
+            stepRunner.start(mode);
         });
 
         // Check for saved state (auto-resume)

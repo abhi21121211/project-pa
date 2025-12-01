@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "name": "react-todo-app",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "@/*": "./*"
+  }
+}

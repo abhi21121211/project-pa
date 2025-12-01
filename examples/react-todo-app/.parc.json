@@ -1,0 +1,19 @@
+{
+  "name": "react-todo-app",
+  "version": "1.0.0",
+  "description": "A beautiful and powerful React Todo List application",
+  "author": "Abhi",
+  "keywords": ["todo", "react", "typescript", "vite", "tailwind"],
+  "buildCommand": "npm run build",
+  "previewCommand": "npm run preview",
+  "devCommand": "npm run dev",
+  "output": "./dist",
+  "src": "./src",
+  "type": "react",
+  "framework": "react",
+  "skipRuntimeInjection": true,
+  "deployment": {
+    "provider": "github-pages",
+    "branch": "gh-pages"
+  }
+}

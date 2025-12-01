@@ -1,9 +1,9 @@
-# @abhi21121211/runtime
+# @abhi21121211/project-pa-runtime
 
-[![npm version](https://img.shields.io/npm/v/@abhi21121211/runtime.svg)](https://www.npmjs.com/package/@abhi21121211/runtime)
+[![npm version](https://img.shields.io/npm/v/@abhi21121211/project-pa-runtime.svg)](https://www.npmjs.com/package/@abhi21121211/project-pa-runtime)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The lightweight runtime widget for **Project PA** (Project Presenter Agent). This zero-dependency library injects a floating "Start Tour" widget, a guided tour popup, and an element highlighter into any web application.
+The lightweight runtime widget for **Project PA** (Project Personal Assistant). This zero-dependency library injects a floating "Start Tour" widget, a guided tour popup, and an element highlighter into any web application.
 
 ## Features
 
@@ -22,7 +22,7 @@ Simply add this script tag to your `index.html` `<body>`. This is the easiest wa
 ```html
 <script 
   type="module" 
-  src="https://unpkg.com/@abhi21121211/runtime@latest/dist/project-pa.min.js"
+  src="https://unpkg.com/@abhi21121211/project-pa-runtime@latest/dist/project-pa.min.js"
   data-project-id="YOUR_PROJECT_ID">
 </script>
 ```
@@ -34,13 +34,13 @@ Simply add this script tag to your `index.html` `<body>`. This is the easiest wa
 If you prefer to bundle it with your application:
 
 ```bash
-npm install @abhi21121211/runtime
+npm install @abhi21121211/project-pa-runtime
 ```
 
 Then import it in your entry file (e.g., `main.js`, `App.tsx`):
 
 ```javascript
-import '@abhi21121211/runtime';
+import '@abhi21121211/project-pa-runtime';
 ```
 
 ## Configuration

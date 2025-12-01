@@ -27,22 +27,37 @@ export class StepRunner {
         this.popup.onMuteToggle = () => this.narrator.toggleMute();
     }
 
-    async start() {
+    async start(mode = 'full') {
         try {
+            let allSteps = [];
             if (this.data) {
-                this.steps = this.data.steps;
+                allSteps = this.data.steps;
             } else if (this.configUrl) {
                 const response = await fetch(this.configUrl);
                 if (!response.ok) throw new Error('Failed to load presentation');
                 const data = await response.json();
-                this.steps = data.steps;
+                allSteps = data.steps;
             } else {
                 throw new Error('No configuration provided');
             }
 
-            // Check for persisted step
+            // Filter steps based on mode
+            if (mode === 'page') {
+                const currentPath = window.location.pathname;
+                this.steps = allSteps.filter(step => {
+                    // Include generic steps (target='body') or steps matching current page
+                    // Fuzzy match: check if step.page is contained in currentPath or vice versa
+                    if (!step.page) return true; // Default to showing if no page defined (backward compat)
+                    return currentPath.includes(step.page) || step.page === 'body';
+                });
+                console.log(`Project PA: Page Mode. Filtered ${this.steps.length} steps for ${currentPath}`);
+            } else {
+                this.steps = allSteps;
+            }
+
+            // Check for persisted step (ONLY for full mode)
             const savedStep = localStorage.getItem(this.STORAGE_KEY);
-            if (savedStep !== null) {
+            if (mode === 'full' && savedStep !== null) {
                 this.currentStep = parseInt(savedStep, 10);
                 // Validate index
                 if (this.currentStep >= this.steps.length) {
@@ -53,12 +68,12 @@ export class StepRunner {
             }
 
             if (this.steps.length === 0) {
-                console.warn('Project PA: No steps found');
+                console.warn('Project PA: No steps found for this mode');
+                alert('No tour steps found for this page.');
                 return;
             }
 
             this.isActive = true;
-            this.currentStep = 0;
             this.showCurrentStep();
 
         } catch (err) {
@@ -122,7 +137,7 @@ export class StepRunner {
         }
 
         // Highlight target
-        this.highlighter.highlight(step.target);
+        this.highlighter.highlight(step.target, step.parent);
 
         // Show popup
         this.popup.show(step.content, this.currentStep, this.steps.length);

@@ -1,0 +1,147 @@
+{
+    "meta": {
+        "project": "react-todo-app",
+        "author": "The TaskPro Team",
+        "entryUrl": "/",
+        "uniqueId": "react-todo-app-bh1ih3"
+    },
+    "steps": [
+        {
+            "id": "intro",
+            "type": "popup",
+            "target": "#app-root",
+            "content": "Hello! I'm Project PA, here to introduce TaskPro, a beautiful and powerful todo list application. It solves the common problem of disorganized tasks by providing an intuitive and feature-rich experience. Let's take a tour!",
+            "duration": 7000
+        },
+        {
+            "id": "hero-section",
+            "type": "highlight",
+            "target": "#hero-section",
+            "content": "First, we land on the engaging #hero-section. See how it clearly explains the app's purpose. The team focused on immediately conveying the value proposition.",
+            "duration": 5000
+        },
+        {
+            "id": "add-first-task-popup",
+            "type": "popup",
+            "target": "#add-todo-form",
+            "content": "Now, let's add our first task! This is the central interaction point for users.",
+            "duration": 4000
+        },
+        {
+            "id": "add-task-title",
+            "type": "highlight",
+            "target": "#todo-title",
+            "content": "The #todo-title field is where the task name goes. It's required for a reason: clarity!",
+            "duration": 3000
+        },
+        {
+            "id": "add-task-description",
+            "type": "highlight",
+            "target": "#todo-description",
+            "content": "The #todo-description is optional but provides great support for breaking down larger tasks.",
+            "duration": 3000
+        },
+        {
+            "id": "select-task-priority",
+            "type": "highlight",
+            "target": "#todo-priority",
+            "content": "Setting a #todo-priority is another optional way to improve task organization.",
+            "duration": 3000
+        },
+        {
+            "id": "add-task-duedate",
+            "type": "highlight",
+            "target": "#todo-duedate",
+            "content": "The #todo-duedate field helps keep users aware of impending deadlines.",
+            "duration": 3000
+        },
+        {
+            "id": "add-task",
+            "type": "highlight",
+            "target": "#add-todo-btn",
+            "content": "Clicking the #add-todo-btn creates the task. I leveraged forms here, because they're semantic, and easily parsed by accessibility tools and web crawlers.",
+            "duration": 4000
+        },
+        {
+            "id": "edit-todo",
+            "type": "highlight",
+            "target": ".TodoItem:first-child .text-blue-400",
+            "content": "A regular user can select a task and click the pen button to edit it.",
+            "duration": 4000,
+            "actions": [
+                {
+                    "do": "click",
+                    "selector": ".TodoItem:first-child .text-blue-400"
+                }
+            ]
+        },
+        {
+            "id": "check-off-todo",
+            "type": "highlight",
+            "page": "/",
+            "parent": ".TodoItem:first-child",
+            "target": ".mt-1",
+            "content": "The team also accounted for checking off a todo; clicking the circle calls the toggleTodo function.",
+            "duration": 4000,
+            "actions": [
+                {
+                    "do": "click",
+                    "selector": ".TodoItem:first-child .mt-1"
+                }
+            ]
+        },
+        {
+            "id": "filter-tasks",
+            "type": "highlight",
+            "target": ".flex.flex-wrap.gap-3 > button:nth-child(2)",
+            "content": "Filtering allows users to focus on active tasks. We can also filter by 'completed' or view 'all' tasks. Each option triggers state management with our custom hook, 'useTodos.ts'.",
+            "duration": 5000,
+            "actions": [
+                {
+                    "do": "click",
+                    "selector": ".flex.flex-wrap.gap-3 > button:nth-child(2)"
+                }
+            ]
+        },
+        {
+            "id": "search-tasks",
+            "type": "highlight",
+            "target": ".space-y-4 > input",
+            "content": "The search bar enables instant task finding by title or description. Another example of React's power for handling UI state!",
+            "duration": 5000
+        },
+        {
+            "id": "view-analytics",
+            "type": "highlight",
+            "target": "#nav-analytics",
+            "content": "Advanced users check their #nav-analytics to view completion rate, current streak, and priority distribution. These insights promote productivity.",
+            "duration": 5000,
+            "actions": [
+                {
+                    "do": "click",
+                    "selector": "#nav-analytics"
+                }
+            ]
+        },
+        {
+            "id": "export-data",
+            "type": "highlight",
+            "target": ".space-y-6 > section:last-child button:first-of-type",
+            "content": "TaskPro lets users export tasks as JSON for backup. The settings page is the central location for user settings, such as data management.",
+            "duration": 5000,
+            "actions": [
+                {
+                    "do": "click",
+                    "selector": "#nav-settings"
+                }
+            ]
+        },
+        {
+            "id": "conclusion",
+            "type": "popup",
+            "target": "#footer",
+            "content": "In summary, TaskPro leverages React 18, TypeScript, and Tailwind CSS to deliver a high-performance, user-friendly experience. The team focused on semantic HTML, accessibility, and a well-organized codebase, demonstrating strong engineering practices. Thank you!",
+            "duration": 7000
+        }
+    ]
+}

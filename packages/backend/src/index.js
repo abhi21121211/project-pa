@@ -19,30 +19,50 @@ mongoose.connect(process.env.MONGODB_URI)
 // Routes
 
 // Save a presentation
-app.post('/api/presentations', async (req, res) => {
-    try {
-        const { projectId, data } = req.body;
+try {
+    const { projectId, data } = req.body;
 
-        if (!projectId || !data) {
-            return res.status(400).json({ error: 'Missing projectId or data' });
+    if (!projectId || !data) {
+        return res.status(400).json({ error: 'Missing projectId or data' });
+    }
+
+    // Find existing presentation
+    let presentation = await Presentation.findOne({ projectId });
+
+    if (presentation) {
+        // Add current data to history
+        presentation.history.push({
+            data: presentation.data,
+            createdAt: presentation.createdAt
+        });
+
+        // Cap history at 3 versions
+        if (presentation.history.length > 3) {
+            presentation.history.shift(); // Remove oldest
         }
 
-        // Update existing or create new
-        const presentation = await Presentation.findOneAndUpdate(
-            { projectId },
-            { data, createdAt: Date.now() },
-            { upsert: true, new: true }
-        );
-
-        res.json({
-            success: true,
-            id: presentation._id,
-            projectId: presentation.projectId
+        // Update with new data
+        presentation.data = data;
+        presentation.createdAt = Date.now();
+        await presentation.save();
+    } else {
+        // Create new
+        presentation = await Presentation.create({
+            projectId,
+            data,
+            history: []
         });
-    } catch (error) {
-        console.error('Error saving presentation:', error);
-        res.status(500).json({ error: 'Internal server error' });
     }
+
+    res.json({
+        success: true,
+        id: presentation._id,
+        projectId: presentation.projectId
+    });
+} catch (error) {
+    console.error('Error saving presentation:', error);
+    res.status(500).json({ error: 'Internal server error' });
+}
 });
 
 // Get a presentation by Project ID

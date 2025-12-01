@@ -1,4 +1,4 @@
-# Project PA (Project Presenter Agent) 🚀
+# Project PA (Project Personal Assistant) 🚀
 
 **Project PA** is an AI-powered SaaS tool that automatically generates and hosts interactive walkthroughs for your web projects.
 
@@ -6,38 +6,53 @@
 
 ## 📦 Packages
 
-- **[@abhi21121211/runtime](https://www.npmjs.com/package/@abhi21121211/runtime)**: The client-side widget.
-- **[@abhi21121211/cli](https://www.npmjs.com/package/@abhi21121211/cli)**: The command-line tool.
+- **[@abhi21121211/project-pa-runtime](https://www.npmjs.com/package/@abhi21121211/project-pa-runtime)**: The client-side widget.
+- **[@abhi21121211/project-pa-cli](https://www.npmjs.com/package/@abhi21121211/project-pa-cli)**: The command-line tool.
+- **@abhi21121211/project-pa-backend**: The cloud service for storing presentations.
 
----
+## 🚀 Quick Start
 
-## � Quick Start Guide
+### 1. Install the CLI
 
-### 1. Install CLI
 ```bash
-npm install -g @abhi21121211/cli
+npm install -g @abhi21121211/project-pa-cli
 ```
 
-### 2. Initialize & Generate
-Go to your project folder:
+### 2. Initialize in your project
+
 ```bash
+cd my-web-project
 pa init
-pa generate --api-key YOUR_GEMINI_API_KEY
 ```
-This creates a `presentation.json` file locally.
 
-### 3. Deploy to Cloud ☁️
-Upload your presentation to our cloud:
+### 3. Generate a Presentation
+
+```bash
+# Interactive mode (Recommended) - Supports Gemini & OpenRouter
+pa generate
+
+# Or pass key directly
+pa generate --api-key YOUR_API_KEY
+```
+
+### 4. Preview
+
+```bash
+pa preview
+```
+
+### 5. Deploy
+
 ```bash
 pa deploy
 ```
-This will give you a **Project ID** and a script tag.
 
-### 4. Add to Website
-Copy the script tag provided by the deploy command and add it to your `index.html`:
+## 📦 Installation (Runtime)
+
+If you just want to add the widget to your site manually:
 
 ```html
-<script type="module" src="https://unpkg.com/@abhi21121211/runtime@latest/dist/project-pa.min.js" data-project-id="YOUR_PROJECT_ID"></script>
+<script type="module" src="https://unpkg.com/@abhi21121211/project-pa-runtime@latest/dist/project-pa.min.js" data-project-id="YOUR_PROJECT_ID"></script>
 ```
 
 That's it! Your tour is now live and hosted on our cloud. You can update it anytime by running `pa deploy` again.
