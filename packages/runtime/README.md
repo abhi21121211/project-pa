@@ -1,71 +1,89 @@
-# @project-pa/runtime
+# @abhi21121211/runtime
 
-The runtime widget for **Project PA** (Project Presenter Agent). This lightweight, zero-dependency (at runtime) library injects a floating widget, guided tour popup, and element highlighter into any web application.
+[![npm version](https://img.shields.io/npm/v/@abhi21121211/runtime.svg)](https://www.npmjs.com/package/@abhi21121211/runtime)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+The lightweight runtime widget for **Project PA** (Project Presenter Agent). This zero-dependency library injects a floating "Start Tour" widget, a guided tour popup, and an element highlighter into any web application.
 
 ## Features
 
-- 🎯 **Element Highlighting**: Visually highlights elements on the page.
-- 💬 **Guided Tour**: Step-by-step popup with descriptions.
-- 🗣️ **Voice Narration**: Reads step content aloud (Text-to-Speech).
-- ⏩ **Auto-Advance**: Automatically proceeds to the next step.
-- 🔄 **Multi-page Support**: Persists state across page reloads and redirects.
-- 📱 **Responsive**: Works on desktop and mobile.
+- 🎯 **Smart Highlighting**: Visually focuses on elements using CSS selectors.
+- 💬 **Guided Tour**: Step-by-step popup with professional narration.
+- 🗣️ **Text-to-Speech**: Built-in voice narration for accessibility and engagement.
+- ⏩ **Auto-Advance**: Seamlessly moves to the next step after a set duration.
+- 🔄 **State Persistence**: Remembers the current step across page reloads and redirects.
+- 📱 **Responsive**: Fully optimized for desktop and mobile devices.
 
-## Installation
+## Installation & Usage
 
-```bash
-npm install @project-pa/runtime
-```
-
-## Usage
-
-### Option 1: Direct Script Tag (Recommended for Static Sites)
-
-Copy the `dist/project-pa.min.js` file to your project and include it:
+### Option 1: CDN (Recommended)
+Simply add this script tag to your `index.html` `<body>`. This is the easiest way to integrate Project PA.
 
 ```html
-<script src="path/to/project-pa.min.js"></script>
+<script 
+  type="module" 
+  src="https://unpkg.com/@abhi21121211/runtime@latest/dist/project-pa.min.js"
+  data-project-id="YOUR_PROJECT_ID">
+</script>
 ```
 
-### Option 2: ES Module Import
+*   Replace `YOUR_PROJECT_ID` with the ID you received from `pa deploy`.
+*   If testing locally with a `presentation.json` file, you can omit `data-project-id`.
+
+### Option 2: NPM
+If you prefer to bundle it with your application:
+
+```bash
+npm install @abhi21121211/runtime
+```
+
+Then import it in your entry file (e.g., `main.js`, `App.tsx`):
 
 ```javascript
-import '@project-pa/runtime';
+import '@abhi21121211/runtime';
 ```
 
 ## Configuration
 
-The runtime looks for a `presentation.json` file in the root of your web server (or relative to the current page).
+The runtime is driven by a `presentation.json` file (fetched from the cloud via `data-project-id` or locally).
 
-### `presentation.json` Format
+### Structure
 
 ```json
 {
   "meta": {
-    "project": "My Project",
-    "entryUrl": "index.html"
+    "project": "My Awesome App",
+    "entryUrl": "/"
   },
   "steps": [
     {
-      "id": "step1",
-      "type": "highlight",
-      "target": "#header",
-      "content": "This is the header section.",
-      "page": "index.html",
+      "id": "step-1",
+      "type": "highlight", 
+      "target": "#login-btn",
+      "content": "Click here to sign in securely.",
       "duration": 5000
     },
     {
-      "id": "step2",
-      "type": "click",
-      "target": ".btn-primary",
-      "content": "Clicking the button...",
-      "actions": [
-        { "do": "click", "selector": ".btn-primary" }
-      ]
+      "id": "step-2",
+      "type": "popup",
+      "target": "body",
+      "content": "This is the main dashboard where you can see your stats.",
+      "page": "/dashboard"
     }
   ]
 }
 ```
+
+### Step Options
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `type` | `string` | `highlight` (focus element), `popup` (message only), `click` (simulate click). |
+| `target` | `string` | CSS selector of the element to interact with (e.g., `#my-id`, `.my-class`). |
+| `content` | `string` | The text to display and narrate. |
+| `duration` | `number` | Time in milliseconds before auto-advancing (default: 5000). |
+| `page` | `string` | (Optional) The URL path this step belongs to. Runtime waits for this page match. |
+| `actions` | `array` | (Optional) List of actions to perform, e.g., `[{"do": "click", "selector": "#btn"}]`. |
 
 ## License
 

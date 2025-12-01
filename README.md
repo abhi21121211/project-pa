@@ -51,6 +51,15 @@ That's it! Your tour is now live and hosted on our cloud. You can update it anyt
 - `pa preview`: Test locally before deploying.
 - `pa deploy`: Upload to cloud and get your embed code.
 
+## 📚 Developer Guide & Best Practices
+
+To get the best results from Project PA's AI generation, follow our **[Developer Best Practices](BEST_PRACTICES.md)**.
+
+Key tips include:
+*   Adding meaningful `id` attributes to interactive elements.
+*   Using semantic HTML (`<nav>`, `<main>`).
+*   Writing a descriptive `README.md`.
+
 ## 📄 License
 
 MIT

@@ -50,17 +50,17 @@ export async function analyzeProject(dir) {
                 const nav = root.querySelector('nav')?.outerHTML || '';
                 const main = root.querySelector('main')?.outerHTML || '';
 
-                projectData.htmlStructure += `\n-- - File: ${relativePath} ---\nTitle: ${title} \n${nav} \n${main.substring(0, 500)}...\n`;
+                projectData.htmlStructure += `\n--- FILE: ${relativePath} ---\nTitle: ${title} \n${nav} \n${main.substring(0, 10000)}...\n`;
                 projectData.routes.push(relativePath);
             }
 
-            // React/Vue/Svelte Components
-            else if (['.jsx', '.tsx', '.vue', '.svelte'].includes(ext)) {
+            // React/Vue/Svelte Components AND JS/TS Logic
+            else if (['.jsx', '.tsx', '.vue', '.svelte', '.js', '.ts'].includes(ext)) {
                 projectData.components.push(relativePath);
 
-                // Simple content extraction (first 500 chars)
+                // Larger content extraction (first 10000 chars)
                 const content = await fs.readFile(filePath, 'utf8');
-                projectData.htmlStructure += `\n-- - Component: ${relativePath} ---\n${content.substring(0, 500)}...\n`;
+                projectData.htmlStructure += `\n--- CODE: ${relativePath} ---\n${content.substring(0, 10000)}...\n`;
             }
         }
     } catch (err) {

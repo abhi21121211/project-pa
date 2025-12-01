@@ -1,6 +1,6 @@
 {
     "name": "@abhi21121211/runtime",
-    "version": "1.1.5",
+    "version": "1.1.6",
     "description": "Runtime widget for Project PA guided tours",
     "main": "dist/project-pa.min.js",
     "files": [

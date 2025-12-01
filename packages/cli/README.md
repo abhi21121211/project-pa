@@ -1,43 +1,83 @@
-# @project-pa/cli
+# @abhi21121211/cli
 
-The Command Line Interface for **Project PA** (Project Presenter Agent). This tool helps you initialize, generate, and preview AI-powered project presentations.
+[![npm version](https://img.shields.io/npm/v/@abhi21121211/cli.svg)](https://www.npmjs.com/package/@abhi21121211/cli)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+The official Command Line Interface for **Project PA** (Project Presenter Agent). This tool empowers you to generate AI-powered guided tours for your web projects, preview them locally, and deploy them to the cloud.
 
 ## Features
 
-- 🚀 **Init**: Quickly set up a new presentation project.
-- 🧠 **Generate**: Use Google Gemini AI to analyze your codebase and generate a presentation script automatically.
-- 🌐 **Preview**: Serve your project locally to test the presentation without CORS issues.
+- 🚀 **Init**: Instantly scaffold a new presentation configuration.
+- 🧠 **Generate**: Leverage Google Gemini AI to analyze your codebase and create a professional, recruiter-ready presentation script.
+- 🌐 **Preview**: Run a local server to test your tour with the runtime widget injected.
+- ☁️ **Deploy**: Upload your presentation to the Project PA cloud and get a shareable embed code.
 
 ## Installation
 
+Install globally via npm:
+
 ```bash
-npm install -g @project-pa/cli
+npm install -g @abhi21121211/cli
 ```
 
 ## Usage
 
-### Initialize a Project
+### 1. Initialize
+Run this in your project root to create a basic configuration:
 
 ```bash
 pa init
 ```
 
-### Generate a Presentation
+### 2. Generate Presentation
+Analyze your project files (including README, components, and routes) and generate a `presentation.json` using AI.
 
-Analyze your project and generate `presentation.json` using AI:
+**Prerequisite**: You need a Google Gemini API Key. [Get one here](https://makersuite.google.com/app/apikey).
 
 ```bash
+# Option A: Pass key directly
 pa generate --api-key YOUR_GEMINI_API_KEY
+
+# Option B: Use environment variable (Recommended)
+export GEMINI_API_KEY=your_key_here
+pa generate
 ```
 
-Or set the environment variable `GEMINI_API_KEY`.
-
-### Preview Project
-
-Start a local server to view your project with the runtime injected (if configured):
+### 3. Preview
+Test your presentation locally. This starts a server and injects the runtime widget into your app.
 
 ```bash
 pa preview --port 3000
+```
+
+### 4. Deploy
+Ready to share? Deploy your presentation to the cloud.
+
+```bash
+pa deploy
+```
+
+On success, you will receive a **Project ID** and a script tag to embed in your live site.
+
+## Configuration
+
+The CLI uses `presentation.json` to store your tour steps. You can manually edit this file to tweak the content, selectors, or timing.
+
+```json
+{
+  "meta": {
+    "project": "My App",
+    "entryUrl": "/"
+  },
+  "steps": [
+    {
+      "type": "popup",
+      "target": "#hero-section",
+      "content": "Welcome to the app!",
+      "duration": 5000
+    }
+  ]
+}
 ```
 
 ## License
