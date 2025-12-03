@@ -14,7 +14,7 @@
     "cli-help": "pa --help"
   },
   "dependencies": {
-    "@abhi21121211/project-pa-cli": "^1.1.14",
+    "@abhi21121211/project-pa-cli": "^1.1.25",
     "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -33,10 +33,13 @@ fetch(presentationUrl)
             stepRunner.start(mode);
         });
 
-        // Check for saved state (auto-resume)
-        if (stepRunner.hasSavedState()) {
-            console.log('Project PA: Resuming from saved state');
-            stepRunner.start();
+        // Check for saved state (auto-resume after redirect)
+        const savedMode = localStorage.getItem('project-pa-mode');
+        const savedStep = localStorage.getItem('project-pa-step');
+        
+        if (savedMode && savedStep !== null) {
+            console.log(`Project PA: Resuming ${savedMode} mode from step ${savedStep}`);
+            stepRunner.start(savedMode);
         }
     })
     .catch(err => console.error('Project PA: Error loading presentation', err));

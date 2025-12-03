@@ -102,20 +102,16 @@ Schema:
       "id": "unique-step-id",
       "type": "popup|highlight|click|navigate",
       "page": "/current-page-route",
-      "parent": "#optional-parent-container-id",
       "target": "#specific-element-id OR .specific-class",
       "content": "Engaging 15-25 word explanation highlighting technical value and user benefit",
-      "duration": 8000,
-      "actions": [
-        {
-          "do": "click|scroll|hover",
-          "selector": "#element-to-interact",
-          "value": "optional-input-value"
-        }
-      ]
+      "duration": 8000
     }
   ]
 }
+
+OPTIONAL FIELDS (use only when needed):
+- "parent": "#container-id" - Only if target is inside a specific container
+- "actions": [{"do": "click", "selector": "#btn"}] - Only for "click" type steps
 
 ═══════════════════════════════════════════════════════════════════
 VALIDATION CHECKLIST (Before outputting)

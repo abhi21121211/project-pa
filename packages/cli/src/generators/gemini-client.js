@@ -1,13 +1,13 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export class GeminiClient {
-  constructor(apiKey) {
+  constructor(apiKey, modelName = 'gemini-2.0-flash-exp') {
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY is required');
     }
     this.genAI = new GoogleGenerativeAI(apiKey);
     this.model = this.genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash-exp',
+      model: modelName,
       generationConfig: {
         temperature: 0.4,  // Balance creativity with consistency
         topP: 0.95,
@@ -16,6 +16,8 @@ export class GeminiClient {
       }
     });
   }
+
+  
 
   async generatePresentation(projectData) {
     const prompt = `You are Project PA (Project Personal Assistant), an expert AI presentation generator for software projects.
@@ -125,20 +127,16 @@ Schema:
       "id": "unique-step-id",
       "type": "popup|highlight|click|navigate",
       "page": "/current-page-route",
-      "parent": "#optional-parent-container-id",
       "target": "#specific-element-id OR .specific-class",
       "content": "Engaging 15-25 word explanation highlighting technical value and user benefit",
-      "duration": 8000,
-      "actions": [
-        {
-          "do": "click|scroll|hover",
-          "selector": "#element-to-interact",
-          "value": "optional-input-value"
-        }
-      ]
+      "duration": 8000
     }
   ]
 }
+
+OPTIONAL FIELDS (use only when needed):
+- "parent": "#container-id" - Only if target is inside a specific container
+- "actions": [{"do": "click", "selector": "#btn"}] - Only for "click" type steps
 
 ═══════════════════════════════════════════════════════════════════
 VALIDATION CHECKLIST (Before outputting)
@@ -184,12 +182,18 @@ EXAMPLE OUTPUT (Reference only)
       "duration": 9000
     },
     {
-      "id": "create-task-button",
-      "type": "highlight",
+      "id": "add-task-click",
+      "type": "click",
       "page": "/",
       "target": "#create-task-btn",
       "content": "The quick-action button leverages React hooks for optimistic UI updates, ensuring tasks appear instantly before server confirmation.",
-      "duration": 9500
+      "duration": 9500,
+      "actions": [
+        {
+          "do": "click",
+          "selector": "#create-task-btn"
+        }
+      ]
     }
   ]
 }
