@@ -24,19 +24,39 @@ export async function generateCommand(options) {
 
         if (apiKeyFromFlag) {
             apiKey = apiKeyFromFlag;
-        }
-
-        // 1. Select Provider
-        const providerAnswer = await inquirer.prompt([
-            {
-                type: 'list',
-                name: 'provider',
-                message: 'Select your LLM Provider (Gemini / OpenRouter):',
-                choices: ['Gemini', 'OpenRouter'],
-                default: 'Gemini'
+            // Auto-detect provider from API key format
+            if (apiKey.startsWith('AIza')) {
+                provider = 'gemini';
+                console.log('✓ Detected Gemini API key');
+            } else if (apiKey.startsWith('sk-or-')) {
+                provider = 'openrouter';
+                console.log('✓ Detected OpenRouter API key');
+            } else {
+                // Ask user to confirm provider if format is unknown
+                const providerAnswer = await inquirer.prompt([
+                    {
+                        type: 'list',
+                        name: 'provider',
+                        message: 'Could not auto-detect provider. Select your LLM Provider:',
+                        choices: ['Gemini', 'OpenRouter'],
+                        default: 'Gemini'
+                    }
+                ]);
+                provider = providerAnswer.provider.toLowerCase();
             }
-        ]);
-        provider = providerAnswer.provider.toLowerCase();
+        } else {
+            // 1. Select Provider (only when no API key provided)
+            const providerAnswer = await inquirer.prompt([
+                {
+                    type: 'list',
+                    name: 'provider',
+                    message: 'Select your LLM Provider (Gemini / OpenRouter):',
+                    choices: ['Gemini', 'OpenRouter'],
+                    default: 'Gemini'
+                }
+            ]);
+            provider = providerAnswer.provider.toLowerCase();
+        }
 
         // 2. Enter API Key
         if (!apiKey) {
@@ -47,12 +67,12 @@ export async function generateCommand(options) {
             }
 
             if (!apiKey) {
-                const keyHint = provider === 'gemini' 
+                const keyHint = provider === 'gemini'
                     ? 'Get your key at: https://aistudio.google.com/apikey'
                     : 'Get your key at: https://openrouter.ai/keys';
-                
+
                 console.log(keyHint);
-                
+
                 const keyAnswer = await inquirer.prompt([
                     {
                         type: 'password',
@@ -87,21 +107,37 @@ export async function generateCommand(options) {
             modelType = typeAnswer.type.toLowerCase();
         }
 
-        // 4. Select Model
+        // 4. Select Model - Use simple strings, then map to model IDs
         let modelChoices = [];
         let modelMessage = '';
-        
+        let modelMap = {};
+
         if (provider === 'gemini') {
-            modelChoices = ['Gemini 2.0 Flash', 'Gemini 1.5 Pro'];
-            modelMessage = 'Select model (Gemini 2.0 Flash / Gemini 1.5 Pro):';
+            modelChoices = ['Gemini 2.0 Flash', 'Gemini 1.5 Flash', 'Gemini 1.5 Pro'];
+            modelMessage = 'Select model (Gemini 2.0 Flash / Gemini 1.5 Flash / Gemini 1.5 Pro):';
+            modelMap = {
+                'Gemini 2.0 Flash': 'gemini-2.0-flash',
+                'Gemini 1.5 Flash': 'gemini-1.5-flash',
+                'Gemini 1.5 Pro': 'gemini-1.5-pro'
+            };
         } else {
-            // OpenRouter models - Updated December 2025
+            // OpenRouter models - VERIFIED WORKING (tested Dec 2024)
             if (modelType === 'free') {
-                modelChoices = ['Grok 4.1 Fast', 'Qwen3 Coder', 'DeepSeek R1T', 'GLM 4.5 Air'];
-                modelMessage = 'Select model (Grok 4.1 Fast / Qwen3 Coder / DeepSeek R1T / GLM 4.5 Air):';
+                modelChoices = ['Llama 3.3', 'Mistral 7B', 'Hermes 3'];
+                modelMessage = 'Select model (Llama 3.3 / Mistral 7B / Hermes 3):';
+                modelMap = {
+                    'Llama 3.3': 'meta-llama/llama-3.3-70b-instruct:free',
+                    'Mistral 7B': 'mistralai/mistral-7b-instruct:free',
+                    'Hermes 3': 'nousresearch/hermes-3-llama-3.1-405b:free'
+                };
             } else {
-                modelChoices = ['Claude 3.5 Sonnet', 'GPT-4o', 'Gemini Pro 1.5'];
-                modelMessage = 'Select model (Claude 3.5 Sonnet / GPT-4o / Gemini Pro 1.5):';
+                modelChoices = ['Claude 3.5', 'GPT-4o', 'Gemini Pro'];
+                modelMessage = 'Select model (Claude 3.5 / GPT-4o / Gemini Pro):';
+                modelMap = {
+                    'Claude 3.5': 'anthropic/claude-3.5-sonnet',
+                    'GPT-4o': 'openai/gpt-4o',
+                    'Gemini Pro': 'google/gemini-pro-1.5'
+                };
             }
         }
 
@@ -113,30 +149,94 @@ export async function generateCommand(options) {
                 choices: modelChoices
             }
         ]);
-        
-        // Map selected model name to actual model ID
-        const modelMap = {
-            // Gemini Direct
-            'Gemini 2.0 Flash': 'gemini-2.0-flash-exp',
-            'Gemini 1.5 Pro': 'gemini-1.5-pro',
-            // OpenRouter Free
-            'Grok 4.1 Fast': 'x-ai/grok-4.1-fast:free',
-            'Qwen3 Coder': 'qwen/qwen3-coder:free',
-            'DeepSeek R1T': 'tngtech/deepseek-r1t-chimera:free',
-            'GLM 4.5 Air': 'z-ai/glm-4.5-air:free',
-            // OpenRouter Paid
-            'Claude 3.5 Sonnet': 'anthropic/claude-3.5-sonnet',
-            'GPT-4o': 'openai/gpt-4o',
-            'Gemini Pro 1.5': 'google/gemini-pro-1.5'
+
+        // Map the selected display name to actual model ID
+        const selectedDisplayName = modelAnswer.model;
+        model = modelMap[selectedDisplayName];
+
+        if (!model) {
+            throw new Error(`Unknown model selected: ${selectedDisplayName}`);
+        }
+
+        // 5. Optional: Protected Routes Authentication
+        let authConfig = {
+            hasProtectedRoutes: false,
+            authToken: null,
+            userRole: null
         };
-        
-        model = modelMap[modelAnswer.model] || modelAnswer.model;
+
+        const protectedRoutesAnswer = await inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'hasProtected',
+                message: 'Does your project have protected/authenticated routes?',
+                default: false
+            }
+        ]);
+
+        if (protectedRoutesAnswer.hasProtected) {
+            const wantToProvideToken = await inquirer.prompt([
+                {
+                    type: 'confirm',
+                    name: 'provideToken',
+                    message: 'Do you want to provide an auth token to access protected pages?',
+                    default: false
+                }
+            ]);
+
+            if (wantToProvideToken.provideToken) {
+                // Get token
+                const tokenAnswer = await inquirer.prompt([
+                    {
+                        type: 'password',
+                        name: 'token',
+                        message: 'Enter your auth token (JWT/Bearer token):',
+                        mask: '*'
+                    }
+                ]);
+
+                authConfig.hasProtectedRoutes = true;
+                authConfig.authToken = tokenAnswer.token;
+
+                // Ask about roles (optional)
+                const hasRolesAnswer = await inquirer.prompt([
+                    {
+                        type: 'confirm',
+                        name: 'hasRoles',
+                        message: 'Does your project have multiple user roles (admin/user/etc)?',
+                        default: false
+                    }
+                ]);
+
+                if (hasRolesAnswer.hasRoles) {
+                    const roleAnswer = await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'role',
+                            message: 'Enter the role to present (e.g., admin, user, manager):',
+                            default: 'user'
+                        }
+                    ]);
+                    authConfig.userRole = roleAnswer.role;
+                    console.log(`✓ Auth configured for role: ${authConfig.userRole}`);
+                } else {
+                    console.log('✓ Auth token configured');
+                }
+            } else {
+                authConfig.hasProtectedRoutes = true;
+                console.log('ℹ Protected routes will be mentioned but not shown in detail.');
+            }
+        }
 
         // Start Generation
         spinner = ora('Scanning project files...').start();
 
         // Analyze Project
         const projectData = await analyzeProject(process.cwd());
+
+        // Add auth config to project data
+        projectData.authConfig = authConfig;
+
         spinner.succeed('Project analyzed');
 
         // Generate Presentation
@@ -151,7 +251,6 @@ export async function generateCommand(options) {
             throw new Error("Invalid provider selected: " + provider + ". Please select 'gemini' or 'openrouter'.");
         }
 
-        console.log('Project Data:', projectData);
 
         const presentation = await client.generatePresentation(projectData);
         spinner.succeed('Presentation generated');

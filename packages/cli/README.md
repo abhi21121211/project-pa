@@ -8,7 +8,7 @@ The official Command Line Interface for **Project PA** (Project Personal Assista
 ## Features
 
 - 🚀 **Init**: Instantly scaffold a new presentation configuration.
-- 🧠 **Generate**: Leverage Google Gemini AI to analyze your codebase and create a professional, recruiter-ready presentation script.
+- 🧠 **Generate**: Leverage AI to analyze your codebase and create a professional, recruiter-ready presentation script.
 - 🌐 **Preview**: Run a local server to test your tour with the runtime widget injected.
 - ☁️ **Deploy**: Upload your presentation to the Project PA cloud and get a shareable embed code.
 
@@ -32,28 +32,40 @@ pa init
 ### 2. Generate Presentation
 Analyze your project files and generate a `presentation.json` using AI.
 
-**New in v1.1.22+**: Interactive setup with support for **Google Gemini** and **OpenRouter**!
-
 ```bash
 pa generate
 ```
 
-The CLI will guide you through a beautiful interactive menu:
+The CLI will guide you through an interactive menu:
 
-1.  **Select Provider**:
-    *   **Google Gemini** (Free tier available)
-    *   **OpenRouter** (Access to Llama 3, Claude 3.5, GPT-4o, etc.)
-2.  **API Key**:
-    *   Enter your key securely (masked input).
-    *   Or set environment variables: `GEMINI_API_KEY` or `OPENROUTER_API_KEY`.
-3.  **Select Model**:
-    *   **Free Models**: Gemini 2.0 Flash, Llama 3.2, Phi-3, Mistral 7B, Qwen 2.5.
-    *   **Paid Models**: Claude 3.5 Sonnet, GPT-4o, Gemini 1.5 Pro.
-    *   **Custom**: Enter any OpenRouter model ID (e.g., `openai/gpt-4-turbo`).
+```
+🚀 Project PA - Presentation Generator
 
-**Non-Interactive Mode:**
-You can still pass an API key directly (defaults to Gemini):
+? Select your LLM Provider (Gemini / OpenRouter): 
+  ❯ Gemini
+    OpenRouter
 
+? Select model (Gemini 2.0 Flash / Gemini 1.5 Pro):
+  ❯ Gemini 2.0 Flash
+    Gemini 1.5 Pro
+```
+
+#### Supported Providers & Models
+
+| Provider | Free Models | Paid Models |
+|----------|-------------|-------------|
+| **Gemini** | Gemini 2.0 Flash | Gemini 1.5 Pro |
+| **OpenRouter** | Grok 4.1 Fast, Qwen3 Coder, DeepSeek R1T, GLM 4.5 Air | Claude 3.5 Sonnet, GPT-4o, Gemini Pro 1.5 |
+
+#### Environment Variables
+Set API keys to skip manual entry:
+```bash
+export GEMINI_API_KEY=your_key_here
+export OPENROUTER_API_KEY=your_key_here
+```
+
+#### Non-Interactive Mode
+Pass API key directly (defaults to Gemini):
 ```bash
 pa generate --api-key YOUR_KEY
 ```
@@ -76,24 +88,42 @@ On success, you will receive a **Project ID** and a script tag to embed in your 
 
 ## Configuration
 
-The CLI uses `presentation.json` to store your tour steps. You can manually edit this file to tweak the content, selectors, or timing.
+The CLI generates `presentation.json` to store your tour steps. You can manually edit this file to tweak the content, selectors, or timing.
 
 ```json
 {
   "meta": {
     "project": "My App",
+    "author": "Developer",
+    "description": "A brief description of the project",
+    "techStack": ["React", "Tailwind CSS"],
     "entryUrl": "/"
   },
   "steps": [
     {
+      "id": "intro",
       "type": "popup",
+      "page": "/",
+      "target": "body",
+      "content": "Welcome to the app! Built with React and Tailwind CSS.",
+      "duration": 8000
+    },
+    {
+      "id": "feature-1",
+      "type": "highlight",
+      "page": "/",
       "target": "#hero-section",
-      "content": "Welcome to the app!",
-      "duration": 5000
+      "content": "This hero section showcases the main value proposition.",
+      "duration": 7000
     }
   ]
 }
 ```
+
+## Links
+
+- 📦 [Runtime Package](https://www.npmjs.com/package/@abhi21121211/project-pa-runtime)
+- 🐙 [GitHub Repository](https://github.com/abhi21121211/project-pa)
 
 ## License
 

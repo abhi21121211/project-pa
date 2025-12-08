@@ -13,6 +13,7 @@ The lightweight runtime widget for **Project PA** (Project Personal Assistant). 
 - ⏩ **Auto-Advance**: Seamlessly moves to the next step after a set duration.
 - 🔄 **State Persistence**: Remembers the current step across page reloads and redirects.
 - 📱 **Responsive**: Fully optimized for desktop and mobile devices.
+- 🎭 **Two Modes**: Full project tour OR current page explanation only.
 
 ## Installation & Usage
 
@@ -43,6 +44,15 @@ Then import it in your entry file (e.g., `main.js`, `App.tsx`):
 import '@abhi21121211/project-pa-runtime';
 ```
 
+## Tour Modes
+
+The widget provides two modes accessible via the floating button:
+
+| Mode | Description |
+|------|-------------|
+| **Start Full Tour** | Navigates to home page and shows ALL steps across all pages |
+| **Explain This Page** | Shows only steps for the CURRENT page (no navigation) |
+
 ## Configuration
 
 The runtime is driven by a `presentation.json` file (fetched from the cloud via `data-project-id` or locally).
@@ -53,37 +63,65 @@ The runtime is driven by a `presentation.json` file (fetched from the cloud via 
 {
   "meta": {
     "project": "My Awesome App",
+    "author": "Developer",
+    "description": "Brief project description",
+    "techStack": ["React", "Node.js"],
     "entryUrl": "/"
   },
   "steps": [
     {
-      "id": "step-1",
-      "type": "highlight", 
-      "target": "#login-btn",
-      "content": "Click here to sign in securely.",
-      "duration": 5000
+      "id": "intro",
+      "type": "popup",
+      "page": "/",
+      "target": "body",
+      "content": "Welcome to the app! Built with React and Node.js.",
+      "duration": 8000
     },
     {
-      "id": "step-2",
+      "id": "login-btn",
+      "type": "highlight", 
+      "page": "/",
+      "target": "#login-btn",
+      "content": "Click here to sign in securely with JWT authentication.",
+      "duration": 7000
+    },
+    {
+      "id": "dashboard",
       "type": "popup",
+      "page": "/dashboard",
       "target": "body",
       "content": "This is the main dashboard where you can see your stats.",
-      "page": "/dashboard"
+      "duration": 8000
     }
   ]
 }
 ```
 
-### Step Options
+### Step Properties
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `type` | `string` | `highlight` (focus element), `popup` (message only), `click` (simulate click). |
-| `target` | `string` | CSS selector of the element to interact with (e.g., `#my-id`, `.my-class`). |
-| `content` | `string` | The text to display and narrate. |
-| `duration` | `number` | Time in milliseconds before auto-advancing (default: 5000). |
-| `page` | `string` | (Optional) The URL path this step belongs to. Runtime waits for this page match. |
-| `actions` | `array` | (Optional) List of actions to perform, e.g., `[{"do": "click", "selector": "#btn"}]`. |
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `id` | `string` | ✅ | Unique identifier for the step |
+| `type` | `string` | ✅ | `popup`, `highlight`, `click`, or `navigate` |
+| `page` | `string` | ✅ | URL path this step belongs to (e.g., `/`, `/about`) |
+| `target` | `string` | ✅ | CSS selector (e.g., `#my-id`, `.my-class`). Use `body` for popups. |
+| `content` | `string` | ✅ | Text to display and narrate (15-25 words recommended) |
+| `duration` | `number` | ❌ | Time in ms before auto-advancing (default: 5000) |
+| `actions` | `array` | ❌ | Actions to perform, e.g., `[{"do": "click", "selector": "#btn"}]` |
+
+### Step Types
+
+| Type | Description | Target |
+|------|-------------|--------|
+| `popup` | Shows a message popup | Use `body` |
+| `highlight` | Highlights a UI element with overlay | Specific selector |
+| `click` | Simulates a click action | Specific selector |
+| `navigate` | Navigates to another page | Specific selector + `page` |
+
+## Links
+
+- 📦 [CLI Package](https://www.npmjs.com/package/@abhi21121211/project-pa-cli)
+- 🐙 [GitHub Repository](https://github.com/abhi21121211/project-pa)
 
 ## License
 

@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export class GeminiClient {
-  constructor(apiKey, modelName = 'gemini-2.0-flash-exp') {
+  constructor(apiKey, modelName = 'gemini-2.0-flash') {
     if (!apiKey) {
       throw new Error('GEMINI_API_KEY is required');
     }
@@ -17,7 +17,7 @@ export class GeminiClient {
     });
   }
 
-  
+
 
   async generatePresentation(projectData) {
     const prompt = `You are Project PA (Project Personal Assistant), an expert AI presentation generator for software projects.
@@ -31,6 +31,47 @@ PROJECT INFORMATION
 Project Name: ${projectData.name}
 Entry URL: ${projectData.entryUrl || '/'}
 Tech Stack: ${projectData.techStack?.join(', ') || 'Not specified'}
+
+${projectData.authConfig?.hasProtectedRoutes ? `
+═══════════════════════════════════════════════════════════════════
+🔐 PROTECTED ROUTES - READ CAREFULLY
+═══════════════════════════════════════════════════════════════════
+- Has Protected Routes: YES
+- Auth Token Provided: ${projectData.authConfig.authToken ? 'YES ✓' : 'NO ✗'}
+- User Role: ${projectData.authConfig.userRole || 'Not specified'}
+
+${!projectData.authConfig.authToken ? `
+⛔ CRITICAL - NO AUTH TOKEN PROVIDED:
+Protected routes include: /admin, /dashboard, /settings, /profile, /account, /panel, /manage, /protected, /private, /user
+
+YOU MUST FOLLOW THESE RULES:
+1. NEVER use "type": "navigate" for protected routes
+2. NEVER use "type": "click" on links to protected routes  
+3. NEVER try to redirect to admin/dashboard/settings pages
+4. ONLY use "type": "popup" to MENTION protected features exist
+
+CORRECT EXAMPLE (popup only, no navigation):
+{
+  "id": "mention-admin",
+  "type": "popup",
+  "page": "/",
+  "target": "body",
+  "content": "The application includes a secure Admin Dashboard with user management, analytics, and settings - accessible after authentication.",
+  "duration": 8000
+}
+
+WRONG (DO NOT DO THIS):
+{
+  "id": "go-to-admin",
+  "type": "navigate",  // ❌ WRONG - will cause redirect loop!
+  "page": "/admin",     // ❌ WRONG - protected route!
+  ...
+}
+` : `
+✓ Auth token provided - you CAN include protected pages for role: ${projectData.authConfig.userRole}
+You may use "navigate" type for protected routes.
+`}
+` : ''}
 
 README Content:
 ${projectData.readmeContent || 'No README provided'}
@@ -259,26 +300,39 @@ NOW GENERATE THE PRESENTATION JSON
       throw new Error('Presentation must contain at least one step');
     }
 
-    // Validate each step
-    presentation.steps.forEach((step, index) => {
+    // Auto-fix and filter steps instead of throwing errors
+    presentation.steps = presentation.steps.filter((step, index) => {
+      // Skip steps missing required fields
       if (!step.id || !step.type || !step.content) {
-        throw new Error(`Step ${index} missing required fields: id, type, or content`);
+        console.warn(`⚠️  Skipping step ${index}: missing required fields`);
+        return false;
       }
 
+      // Fix invalid step types
       if (!['popup', 'highlight', 'click', 'navigate'].includes(step.type)) {
-        throw new Error(`Step ${index} has invalid type: ${step.type}`);
+        console.warn(`⚠️  Step ${index}: converting invalid type '${step.type}' to 'popup'`);
+        step.type = 'popup';
       }
 
+      // Fix missing targets - convert to popup type
       if (step.type !== 'popup' && !step.target) {
-        throw new Error(`Step ${index} of type '${step.type}' requires a target selector`);
+        console.warn(`⚠️  Step ${index}: no target found, converting to popup`);
+        step.type = 'popup';
+        step.target = 'body';
       }
 
       // Warn about potentially problematic selectors
       if (step.target && /^(div|span|button|a)$/.test(step.target)) {
         console.warn(`⚠️  Step ${step.id}: Generic selector "${step.target}" may not be specific enough`);
       }
+
+      return true;
     });
 
-    console.log(`✅ Presentation validated: ${presentation.steps.length} steps generated`);
+    if (presentation.steps.length === 0) {
+      throw new Error('No valid steps found in presentation');
+    }
+
+    console.log(`✅ Presentation validated: ${presentation.steps.length} steps`);
   }
 }

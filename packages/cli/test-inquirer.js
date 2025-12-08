@@ -1,24 +1,26 @@
 import inquirer from 'inquirer';
 
-async function run() {
-    const modelChoices = [
-        { name: 'Gemini 2.0 Flash (Free)', value: 'google/gemini-2.0-flash-exp:free' },
-        { name: 'Llama 3.2 (Free)', value: 'meta-llama/llama-3.2-11b-vision-instruct:free' },
-        { name: 'Mistral 7B (Free)', value: 'mistralai/mistral-7b-instruct:free' }
-    ];
+// Test if inquirer returns name or value
+const choices = [
+    { name: 'Llama 3.3', value: 'meta-llama/llama-3.3-70b-instruct:free' },
+    { name: 'Mistral 7B', value: 'mistralai/mistral-7b-instruct:free' }
+];
 
-    console.log('Choices:', modelChoices);
-
-    const modelAnswer = await inquirer.prompt([
+async function test() {
+    const answer = await inquirer.prompt([
         {
             type: 'list',
             name: 'model',
-            message: `select your model ${modelChoices.map(c => c.name.split(' ')[0]).join('/')}`,
-            choices: modelChoices
+            message: 'Select model:',
+            choices: choices
         }
     ]);
 
-    console.log('Selected model:', modelAnswer.model);
+    console.log('\n=== RESULT ===');
+    console.log('answer.model:', answer.model);
+    console.log('Type:', typeof answer.model);
+    console.log('\nExpected: meta-llama/llama-3.3-70b-instruct:free');
+    console.log('Match:', answer.model === 'meta-llama/llama-3.3-70b-instruct:free');
 }
 
-run();
+test();

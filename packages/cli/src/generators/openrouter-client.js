@@ -23,6 +23,48 @@ Project Name: ${projectData.name}
 Entry URL: ${projectData.entryUrl || '/'}
 Tech Stack: ${projectData.techStack?.join(', ') || 'Not specified'}
 
+${projectData.authConfig?.hasProtectedRoutes ? `
+═══════════════════════════════════════════════════════════════════
+🔐 PROTECTED ROUTES - READ CAREFULLY
+═══════════════════════════════════════════════════════════════════
+- Has Protected Routes: YES
+- Auth Token Provided: ${projectData.authConfig.authToken ? 'YES ✓' : 'NO ✗'}
+- User Role: ${projectData.authConfig.userRole || 'Not specified'}
+
+${!projectData.authConfig.authToken ? `
+⛔ CRITICAL - NO AUTH TOKEN PROVIDED:
+Protected routes include: /admin, /dashboard, /settings, /profile, /account, /panel, /manage, /protected, /private, /user
+
+YOU MUST FOLLOW THESE RULES:
+1. NEVER use "type": "navigate" for protected routes
+2. NEVER use "type": "click" on links to protected routes  
+3. NEVER try to redirect to admin/dashboard/settings pages
+4. ONLY use "type": "popup" to MENTION protected features exist
+
+CORRECT EXAMPLE (popup only, no navigation):
+{
+  "id": "mention-admin",
+  "type": "popup",
+  "page": "/",
+  "target": "body",
+  "content": "The application includes a secure Admin Dashboard with user management, analytics, and settings - accessible after authentication.",
+  "duration": 8000
+}
+
+WRONG (DO NOT DO THIS):
+{
+  "id": "go-to-admin",
+  "type": "navigate",  // ❌ WRONG - will cause redirect loop!
+  "page": "/admin",     // ❌ WRONG - protected route!
+  ...
+}
+` : `
+✓ Auth token provided - you CAN include protected pages for role: ${projectData.authConfig.userRole}
+You may use "navigate" type for protected routes.
+`}
+` : ''}
+
+
 README Content:
 ${projectData.readmeContent || 'No README provided'}
 
@@ -196,8 +238,17 @@ NOW GENERATE THE PRESENTATION JSON
                 throw new Error('Invalid JSON response from OpenRouter. Try regenerating.');
             }
             if (error.response) {
-                console.error('OpenRouter API Error:', error.response.data);
-                throw new Error(`OpenRouter API Error: ${error.response.status} - ${JSON.stringify(error.response.data)}`);
+                const errData = error.response.data;
+                const errMsg = errData?.error?.message || '';
+
+                // User-friendly message for context length errors
+                if (errMsg.includes('maximum context length') || errMsg.includes('tokens')) {
+                    console.error('\n⚠️  Project too large for selected model!');
+                    console.error('Tip: Run from a smaller project folder or try Gemini (larger context).\n');
+                }
+
+                console.error('OpenRouter API Error:', errData);
+                throw new Error(`OpenRouter API Error: ${error.response.status} - ${JSON.stringify(errData)}`);
             }
             throw error;
         }
@@ -212,21 +263,34 @@ NOW GENERATE THE PRESENTATION JSON
             throw new Error('Presentation must contain at least one step');
         }
 
-        // Validate each step
-        presentation.steps.forEach((step, index) => {
+        // Auto-fix and filter steps instead of throwing errors
+        presentation.steps = presentation.steps.filter((step, index) => {
+            // Skip steps missing required fields
             if (!step.id || !step.type || !step.content) {
-                throw new Error(`Step ${index} missing required fields: id, type, or content`);
+                console.warn(`⚠️  Skipping step ${index}: missing required fields`);
+                return false;
             }
 
+            // Fix invalid step types
             if (!['popup', 'highlight', 'click', 'navigate'].includes(step.type)) {
-                throw new Error(`Step ${index} has invalid type: ${step.type}`);
+                console.warn(`⚠️  Step ${index}: converting invalid type '${step.type}' to 'popup'`);
+                step.type = 'popup';
             }
 
+            // Fix missing targets - convert to popup type
             if (step.type !== 'popup' && !step.target) {
-                throw new Error(`Step ${index} of type '${step.type}' requires a target selector`);
+                console.warn(`⚠️  Step ${index}: no target found, converting to popup`);
+                step.type = 'popup';
+                step.target = 'body';
             }
+
+            return true;
         });
 
-        console.log(`✅ Presentation validated: ${presentation.steps.length} steps generated`);
+        if (presentation.steps.length === 0) {
+            throw new Error('No valid steps found in presentation');
+        }
+
+        console.log(`✅ Presentation validated: ${presentation.steps.length} steps`);
     }
 }

@@ -1,6 +1,6 @@
 {
     "name": "@abhi21121211/project-pa-cli",
-    "version": "1.1.35",
+    "version": "1.1.45",
     "description": "CLI tool for Project PA",
     "main": "bin/pa.js",
     "bin": {
