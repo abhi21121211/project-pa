@@ -6,6 +6,10 @@ const PresentationSchema = new mongoose.Schema({
         required: true,
         index: true
     },
+    deployTokenHash: {
+        type: String,
+        required: false // absent on legacy rows created before token auth existed
+    },
     data: {
         type: Object,
         required: true

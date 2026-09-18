@@ -54,11 +54,20 @@ export async function deployCommand() {
         spinner.text = 'Uploading to server...';
         const response = await axios.post(`${BACKEND_URL}/api/presentations`, {
             projectId,
-            data: presentationData
+            data: presentationData,
+            token: config.deployToken
         });
 
         if (response.data.success) {
             spinner.succeed(chalk.green('Presentation deployed successfully! 🚀'));
+
+            // Server issues a deploy token the first time a project is created
+            // (or when claiming a pre-token legacy project). Save it so future
+            // deploys can prove ownership.
+            if (response.data.token) {
+                config.deployToken = response.data.token;
+                fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+            }
 
             console.log(chalk.cyan(`\n📦 Project ID: ${projectId}`));
 
@@ -76,7 +85,11 @@ export async function deployCommand() {
 
     } catch (error) {
         spinner.fail('Error deploying presentation.');
-        if (error.code === 'ECONNREFUSED') {
+        if (error.response?.status === 401) {
+            console.error(chalk.red('Deploy token rejected by server for this Project ID.'));
+            console.error(chalk.gray('   This usually means .pa-config.json was lost, edited, or shared across machines.'));
+            console.error(chalk.gray('   Delete .pa-config.json to deploy as a brand new Project ID.'));
+        } else if (error.code === 'ECONNREFUSED') {
             console.error(chalk.red('Could not connect to backend server. Is it running?'));
         } else {
             console.error(chalk.red(error.message));

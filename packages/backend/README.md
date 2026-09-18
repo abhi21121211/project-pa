@@ -11,17 +11,25 @@ This is the backend service for Project PA, responsible for hosting and serving 
   ```json
   {
     "projectId": "my-project-id",
-    "data": { ...presentation.json content... }
+    "data": { ...presentation.json content... },
+    "token": "deploy token from a previous response (omit on first deploy)"
   }
   ```
-- **Response**:
+- **Response** (the `token` field is included only the first time a `projectId` is
+  created, or when claiming a legacy row that predates token auth — save it, it is
+  not shown again):
   ```json
   {
     "success": true,
     "id": "mongo_id",
-    "projectId": "my-project-id"
+    "projectId": "my-project-id",
+    "token": "issued only on creation"
   }
   ```
+- **Auth**: the first deploy of a `projectId` creates it and returns a `token`.
+  Every later deploy to that same `projectId` must include that `token`, or the
+  request is rejected with `401`. This stops anyone else from overwriting a
+  presentation just by guessing its `projectId`.
 
 ### 2. Get Presentation
 - **URL**: `/api/presentations/:projectId`
